@@ -1,5 +1,5 @@
 # CCL2019-Chinese-Humor-Computation 1st place solution 
-### run
+### 运行
 	任务一和任务二分别运行run_bert.sh和run_bert_cls3.sh 
 
 	选取不同的预训练模型和任务数据即可
