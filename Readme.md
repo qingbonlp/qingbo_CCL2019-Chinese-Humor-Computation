@@ -1,8 +1,12 @@
 # CCL2019-Chinese-Humor-Computation 1st place solution 
 ### 运行
-	任务一和任务二分别运行run_bert.sh和run_bert_cls3.sh 
+	1.在pretrain下生成预训练模型
+	
+	2.添加任务数据到对应路径，并在路径下运行preproces.py，生成训练数据
+	
+	3.任务一和任务二分别运行run_bert.sh和run_bert_cls3.sh，生成任务模型以及模型预测 
 
-	选取不同的预训练模型和任务数据即可
+	4.选取不同的预训练模型和预测结果，运行F1.py和F2.py进行模型融合，生成最终预测结果
 
 ### 赛题介绍
 	幽默是一种特殊的语言表达方式，在日常生活中扮演着化解尴尬、活跃气氛、促进交流的重要角色。
@@ -23,8 +27,8 @@
 	6.其他trick
 	*对于本题，task1区分度较task2大，任务得分权重较大0.6，task2*0.4，针对任务，应该优先优化task1
 	*本团队在任务进行当中，发现两个任务存在上下游的关系，尝试使用多任务联合学习，并使用任务二的数据对任务一进行数据扩充，取得了明显的效果。
-### Pre-train
-	所使用的预训练模型一共八个： 
+###  further pre-train BERT or other models on within-task training data and in-domain data
+	所使用的预训练模型一共四个，分别是bert/bert_wwm/bert_wwm_ex/roberta，在不同数据上进一步与训练得到下面八个模型： 
 	pytorchmodeltask12_bert_1005 
 	pytorchmodeltask12_roerta_1005 
 	pytorchmodeltask12_wwm_1005 
@@ -34,13 +38,11 @@
 	pytorchmodeltaskalldata_wwm_1005 
 	pytorchmodeltaskalldata_wwm_ex_1005 
 ### fine-tune
-用bert等预训练模型，采用输出的[CLS]token的向量作为特征，向下接线性分类层。 
+	用bert等事先训练好的预训练模型，采用输出的[CLS]token的向量作为特征，向下接线性分类层。 
 ### 模型结构
-
+	
 ### 融合策略
-	任务一包括在bert_keras上训练的模型一起融合 
-
-	分别之于任务一二训练八个五折模型。 
+	对于cv内的每个模型，分别在其预留验证集上对结果进行微调，找到最佳的分类阈值，并用在测试集的预测结果。综合所有模型的微调结果，投票生成最终预测。 
 ### Multi-task learning
 
 
