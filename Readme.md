@@ -28,15 +28,20 @@
 	*对于本题，task1区分度较task2大，任务得分权重较大0.6，task2*0.4，针对任务，应该优先优化task1
 	*本团队在任务进行当中，发现两个任务存在上下游的关系，尝试使用多任务联合学习，并使用任务二的数据对任务一进行数据扩充，取得了明显的效果。
 ###  further pre-train BERT or other models on within-task training data and in-domain data
-	所使用的预训练模型一共四个，分别是bert/bert_wwm/bert_wwm_ex/roberta，在不同数据上进一步与训练得到下面八个模型： 
-	pytorchmodeltask12_bert_1005 
-	pytorchmodeltask12_roerta_1005 
-	pytorchmodeltask12_wwm_1005 
-	pytorchmodeltask12_wwm_ex_1005 
-	pytorchmodeltaskalldata_bert_1005 
-	pytorchmodeltaskalldata_roerta_1006 
-	pytorchmodeltaskalldata_wwm_1005 
-	pytorchmodeltaskalldata_wwm_ex_1005 
+	#####在pretrain下生成预训练模型
+      1.通过datapro.py对数据进行处理，每段话从中间断开分成两句话，每段话之间用空白行隔开，针对ccl2019幽默度比赛task1和task2，生成了
+      cclhumortask12_bert.txt，以及加上去年ccl幽默度得比赛数据和我们自行对task1数据翻译生成得到得数据，生成了cclhumortaskalldata_bert.txt
+      2.通过运行prepocess.py对cclhumortask12_bert.txt和cclhumortaskalldata_bert.txt这两份数据分别在chinese_L-12_H-768_A-12、bert_wwm、bert_wwm_ex
+      、roberta四个中文预训练模型处理得到了8个文件夹
+      pytorchmodeltask12_bert_1005 
+      pytorchmodeltask12_roerta_1005 
+      pytorchmodeltask12_wwm_1005 
+      pytorchmodeltask12_wwm_ex_1005 
+      pytorchmodeltaskalldata_bert_1005 
+      pytorchmodeltaskalldata_roerta_1006 
+      pytorchmodeltaskalldata_wwm_1005 
+      pytorchmodeltaskalldata_wwm_ex_1005 
+      3.运行finetune_on_pretrain.py针对上述生成得8个文件夹分别进行预训练，为了不产生太多的文件夹最终生成的pytorch预训练模型也放在了上面8个文件夹中
 ### fine-tune
 	用bert等事先训练好的预训练模型，采用输出的[CLS]token的向量作为特征，向下接线性分类层。 
 ### 模型结构
